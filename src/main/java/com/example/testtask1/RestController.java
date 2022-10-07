@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 import java.util.Set;
 
 @org.springframework.web.bind.annotation.RestController
@@ -53,18 +54,21 @@ public class RestController {
 	}
 	@PutMapping("/edit/{id}")
 	private Item editItem(@RequestBody Object item, @PathVariable("id") Long id) {
-		Item updateItem =  itemRepository.findById(id).orElseThrow();
-		LinkedHashMap items = (LinkedHashMap) ((LinkedHashMap) item).get("item");
-		updateItem.setName((String) (items).get("name"));
-		updateItem.setImageUrl((String) (items).get("imageUrl"));
-		updateItem.setWeightInGrams(Integer.parseInt(String.valueOf((items).get("weightInGrams"))));
-		updateItem.setCount(Integer.parseInt(String.valueOf((items).get("count"))));
-		Size size = new Size();
-		size.setWidth(Integer.parseInt(String.valueOf(((LinkedHashMap<String, LinkedHashMap>) items).get("size").get("width"))));
-		size.setHeight(Integer.parseInt(String.valueOf(((LinkedHashMap<String, LinkedHashMap>) items).get("size").get("height"))));
-		updateItem.setSize(size);
+		Optional<Item> updateItem1 =  itemRepository.findById(id);
+		if (updateItem1.isPresent()) {
+			Item updateItem = updateItem1.get();
+			LinkedHashMap items = (LinkedHashMap) ((LinkedHashMap) item).get("item");
+			updateItem.setName((String) (items).get("name"));
+			updateItem.setImageUrl((String) (items).get("imageUrl"));
+			updateItem.setWeightInGrams(Integer.parseInt(String.valueOf((items).get("weightInGrams"))));
+			updateItem.setCount(Integer.parseInt(String.valueOf((items).get("count"))));
+			Size size = new Size();
+			size.setWidth(Integer.parseInt(String.valueOf(((LinkedHashMap<String, LinkedHashMap>) items).get("size").get("width"))));
+			size.setHeight(Integer.parseInt(String.valueOf(((LinkedHashMap<String, LinkedHashMap>) items).get("size").get("height"))));
+			updateItem.setSize(size);
 
-		return itemRepository.save(updateItem);
+			return itemRepository.save(updateItem);
+		}
 	}
 	@DeleteMapping("/delete/{id}")
 	private boolean deleteItem(@PathVariable("id") Long id){
