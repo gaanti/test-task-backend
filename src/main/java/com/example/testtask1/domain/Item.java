@@ -30,7 +30,7 @@ public class Item extends BaseEntity {
 	private String imageUrl;
 	private String name;
 	private int count;
-	private int weight;
+	private int weightInGrams;
 	@Embedded
 	private Size size;
 
@@ -46,18 +46,21 @@ public class Item extends BaseEntity {
 		Item item = (Item) o;
 
 		if (getCount() != item.getCount()) return false;
-		if (getWeight() != item.getWeight()) return false;
+		if (getWeightInGrams() != item.getWeightInGrams()) return false;
 		if (getImageUrl() != null ? !getImageUrl().equals(item.getImageUrl()) : item.getImageUrl() != null)
 			return false;
 		if (getName() != null ? !getName().equals(item.getName()) : item.getName() != null) return false;
-		return getSize() != null ? getSize().equals(item.getSize()) : item.getSize() == null;
+		if (getSize() != null ? !getSize().equals(item.getSize()) : item.getSize() != null) return false;
+
+		return true;
 	}
+
 	@Override
 	public int hashCode() {
 		int result = getImageUrl() != null ? getImageUrl().hashCode() : 0;
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		result = 31 * result + getCount();
-		result = 31 * result + getWeight();
+		result = 31 * result + getWeightInGrams();
 		result = 31 * result + (getSize() != null ? getSize().hashCode() : 0);
 		return result;
 	}
