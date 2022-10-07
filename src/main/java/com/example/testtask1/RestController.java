@@ -68,7 +68,7 @@ public class RestController {
 			updateItem.setSize(size);
 
 			return itemRepository.save(updateItem);
-		}
+		} else return null;
 	}
 	@DeleteMapping("/delete/{id}")
 	private boolean deleteItem(@PathVariable("id") Long id){
